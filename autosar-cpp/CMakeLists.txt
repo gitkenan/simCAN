@@ -85,8 +85,8 @@ add_executable(autosar_demo
 
 target_link_libraries(autosar_demo PRIVATE autosar_core Threads::Threads)
 
-# Testing (optional - can be enabled later)
-option(BUILD_TESTS "Build test suite" OFF)
+# Testing
+option(BUILD_TESTS "Build test suite" ON)
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
