@@ -146,36 +146,50 @@ void SimpleHTTPServer::serverLoop() {
         }
         
         // Handle client in separate thread for better responsiveness
-        std::thread([this, client_socket]() {
+        // Store thread to ensure proper cleanup
+        auto worker = std::make_shared<std::thread>([this, client_socket]() {
             handleClient(client_socket);
-        }).detach();
+        });
+        worker->detach(); // Allow thread to run independently but avoid resource leak
     }
 }
 
 void SimpleHTTPServer::handleClient(int client_socket) {
-    char buffer[4096];
-    ssize_t bytes_read = read(client_socket, buffer, sizeof(buffer) - 1);
+    // RAII socket guard to ensure socket is always closed
+    struct SocketGuard {
+        int socket_fd;
+        explicit SocketGuard(int fd) : socket_fd(fd) {}
+        ~SocketGuard() { if (socket_fd >= 0) close(socket_fd); }
+        SocketGuard(const SocketGuard&) = delete;
+        SocketGuard& operator=(const SocketGuard&) = delete;
+    };
     
-    if (bytes_read <= 0) {
-        close(client_socket);
-        return;
-    }
+    SocketGuard socket_guard(client_socket);
     
-    buffer[bytes_read] = '\0';
-    std::string request(buffer);
+    try {
+        char buffer[4096];
+        ssize_t bytes_read = read(client_socket, buffer, sizeof(buffer) - 1);
+        
+        if (bytes_read <= 0) {
+            return; // Socket will be closed by SocketGuard
+        }
+        
+        // Ensure null termination
+        buffer[std::min(bytes_read, static_cast<ssize_t>(sizeof(buffer) - 1))] = '\0';
+        std::string request(buffer);
     
-    std::string method, path;
-    parseHTTPRequest(request, method, path);
-    
-    logMessage("DEBUG", method + " " + path);
-    
-    std::string response;
-    
-    if (path.substr(0, 5) == "/api/") {
-        response = handleAPIRequest(method, path);
-    } else {
-        // Default response for non-API requests
-        std::string body = R"(
+        std::string method, path;
+        parseHTTPRequest(request, method, path);
+        
+        logMessage("DEBUG", method + " " + path);
+        
+        std::string response;
+        
+        if (path.substr(0, 5) == "/api/") {
+            response = handleAPIRequest(method, path);
+        } else {
+            // Default response for non-API requests
+            std::string body = R"(
 {
   "message": "AUTOSAR HMI Server",
   "version": "1.0.0",
@@ -187,16 +201,23 @@ void SimpleHTTPServer::handleClient(int client_socket) {
   ]
 }
 )";
-        response = buildHTTPResponse(200, "application/json", body);
+            response = buildHTTPResponse(200, "application/json", body);
+        }
+        
+        ssize_t bytes_written = write(client_socket, response.c_str(), response.length());
+        if (bytes_written < 0) {
+            logMessage("WARNING", "Failed to write response to client");
+        }
+        
+        requests_served_++;
+    } catch (const std::exception& e) {
+        logMessage("ERROR", "Exception in handleClient: " + std::string(e.what()));
+        errors_count_++;
+    } catch (...) {
+        logMessage("ERROR", "Unknown exception in handleClient");
+        errors_count_++;
     }
-    
-    ssize_t bytes_written = write(client_socket, response.c_str(), response.length());
-    if (bytes_written < 0) {
-        logMessage("WARNING", "Failed to write response to client");
-    }
-    close(client_socket);
-    
-    requests_served_++;
+    // Socket automatically closed by SocketGuard destructor
 }
 
 std::string SimpleHTTPServer::parseHTTPRequest(const std::string& request, std::string& method, std::string& path) {
