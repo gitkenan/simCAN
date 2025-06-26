@@ -57,65 +57,45 @@ The challenge is bridging this embedded-style C++ system with a modern web front
 - Validate message serialization/deserialization
 - Test connection resilience and reconnection logic
 
-### Phase 2: Core Vehicle Systems (Week 2)
+### Phase 2: Core Vehicle Dashboard (Week 2)
 
-**2.1 Engine Dashboard Components**
+**2.1 Engine Instrument Cluster**
 - Create RPM gauge with smooth animations (SVG-based)
 - Implement temperature indicator with warning zones
 - Add throttle position display
-- Design engine status summary panel
+- Design speedometer with realistic scaling
 
 **2.2 Body Control Interface**
 - Door lock/unlock toggle buttons with visual feedback
 - Window position sliders with percentage indicators
-- Lighting control switches (headlights, turn signals)
+- Lighting control switches (headlights, turn signals, hazards)
 - Real-time state synchronization with backend
 
 **2.3 Data Flow Implementation**
 - Connect frontend controls to C++ Engine and Body Control SWCs
-- Implement bidirectional data flow (user actions → CAN messages → state updates)
+- Implement bidirectional data flow (user actions → system responses)
 - Add error handling for communication failures
 - Create TypeScript interfaces matching AUTOSAR data structures
 
-### Phase 3: Advanced Dashboard Features (Week 3)
+### Phase 3: Professional Automotive Experience (Week 3)
 
-**3.1 Professional Automotive UI**
+**3.1 Authentic Automotive Styling**
 - Design automotive-style gauge clusters with proper scaling
 - Implement warning light indicators with authentic automotive symbols
-- Create responsive layout that works on different screen sizes
-- Add dark/light theme switching with automotive styling
+- Create responsive layout optimized for landscape displays
+- Professional dark theme with automotive-grade color schemes
 
-**3.2 Real-time Monitoring**
-- Live CAN message viewer with filtering and search
-- System performance monitoring (RTE cycle times, message frequencies)
-- Error log display with automotive diagnostic codes
-- Network topology visualization
+**3.2 Interactive Vehicle Control**
+- Ignition system (Off/ACC/ON/START positions)
+- Gear selector display (P/R/N/D)
+- Turn signal stalk simulation
+- Emergency hazard controls
 
-**3.3 Interactive Features**
-- Scenario simulation buttons (startup sequence, driving cycles)
-- Manual override controls for testing specific conditions
-- Export functionality for CAN logs and system state
-- Configuration panel for simulation parameters
-
-### Phase 4: Educational and Production Features (Week 4)
-
-**4.1 Educational Components**
-- Interactive tutorials explaining automotive systems
-- Tooltip explanations for all controls and indicators
-- CAN message breakdown with human-readable explanations
-- Automotive terminology glossary
-
-**4.2 Professional Polish**
-- Loading states and smooth transitions
-- Comprehensive error boundary handling
-- Accessibility compliance (WCAG guidelines)
-- Performance optimization for 60fps animations
-
-**4.3 Documentation and Testing**
-- Component library documentation with Storybook
-- Comprehensive unit and integration tests
-- User acceptance testing scenarios
-- Deployment preparation
+**3.3 System Integration Polish**
+- Smooth animations and state transitions
+- Realistic timing for vehicle responses
+- Error boundary handling for robust operation
+- Performance optimization for 60fps dashboard updates
 
 ## Technical Implementation Details
 
@@ -125,18 +105,24 @@ The challenge is bridging this embedded-style C++ system with a modern web front
 ```
 App
 ├── VehicleDashboard
-│   ├── EngineCluster
+│   ├── InstrumentCluster
 │   │   ├── RPMGauge
+│   │   ├── Speedometer
 │   │   ├── TemperatureIndicator
-│   │   └── ThrottleDisplay
-│   ├── BodyControlPanel
-│   │   ├── DoorControls
+│   │   └── FuelGauge
+│   ├── CenterConsole
+│   │   ├── IgnitionControl
+│   │   ├── GearSelector
+│   │   ├── ClimateControls
+│   │   └── AudioControls
+│   ├── DoorPanel
 │   │   ├── WindowControls
-│   │   └── LightingControls
-│   └── SystemMonitor
-│       ├── CANMessageViewer
-│       ├── PerformanceMetrics
-│       └── ErrorDisplay
+│   │   ├── DoorLocks
+│   │   └── MirrorControls
+│   └── LightingControls
+│       ├── HeadlightSwitch
+│       ├── TurnSignals
+│       └── HazardButton
 └── WebSocketProvider
 ```
 
@@ -178,24 +164,26 @@ class WebSocketBridge {
 interface VehicleStateMessage {
   type: 'VEHICLE_STATE';
   timestamp: number;
-  engine: EngineData;
-  body: BodyControlData;
-  system: SystemStatus;
+  engine: {
+    rpm: number;
+    temperature: number;
+    throttlePosition: number;
+    running: boolean;
+  };
+  body: {
+    doors: DoorStatus;
+    windows: WindowPosition;
+    lights: LightControl;
+  };
+  ignition: 'OFF' | 'ACC' | 'ON' | 'START';
+  gear: 'P' | 'R' | 'N' | 'D';
 }
 
 interface UserCommandMessage {
   type: 'USER_COMMAND';
-  component: 'engine' | 'body' | 'system';
+  component: 'engine' | 'body' | 'ignition' | 'transmission';
   action: string;
   parameters: Record<string, any>;
-}
-
-interface CANMessageEvent {
-  type: 'CAN_MESSAGE';
-  messageId: number;
-  data: number[];
-  direction: 'TX' | 'RX';
-  timestamp: number;
 }
 ```
 
@@ -225,7 +213,7 @@ interface CANMessageEvent {
 ### Educational Value
 - **Automotive Relevance**: All UI elements map to real vehicle systems
 - **Professional Standards**: Code quality matching automotive industry practices
-- **Learning Outcomes**: Clear progression from user action to CAN message to system response
+- **Learning Outcomes**: Experience controlling a vehicle through authentic interface
 - **Industry Readiness**: Portfolio-quality demonstration of automotive HMI development
 
 ## Risk Mitigation
@@ -243,14 +231,14 @@ interface CANMessageEvent {
 ## Future Enhancement Roadmap
 
 ### Immediate Extensions (Post-MVP)
-- **Mobile Responsive Design**: Tablet and phone compatibility
-- **Advanced Diagnostics**: Professional-grade diagnostic tool integration
-- **Data Recording**: Trip recording and playback functionality
+- **Mobile Responsive Design**: Tablet compatibility for portable testing
+- **Additional Vehicle Systems**: Transmission control, brake monitoring
+- **Scenario Presets**: One-click vehicle state configurations (parking, highway, etc.)
 
 ### Advanced Features
-- **3D Vehicle Visualization**: Interactive 3D model with real-time state
-- **Simulation Scenarios**: Pre-built test scenarios for different driving conditions
-- **Cloud Integration**: Remote monitoring and diagnostics capabilities
+- **3D Vehicle Visualization**: Interactive 3D model showing door/window states
+- **Multiple Vehicle Types**: Different dashboard layouts (sedan, SUV, truck)
+- **Driver Profiles**: Saved preferences for seat, mirror, climate settings
 
 ---
 
