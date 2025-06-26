@@ -1,24 +1,16 @@
 # Automotive CAN & AUTOSAR Learning Project
 
-A comprehensive automotive software development project demonstrating **AUTOSAR architecture**, **CAN communication protocols**, and **modern C++ embedded systems programming**. This project showcases production-ready automotive software patterns suitable for ECU development and embedded systems roles.
+A comprehensive automotive software development project demonstrating AUTOSAR architecture, CAN communication protocols, and modern C++ embedded systems programming. This project showcases production-ready automotive software patterns suitable for ECU development and embedded systems roles.
 
-## 🎯 Project Highlights
+## Project Highlights
 
-### [**AUTOSAR C++ Implementation**](./autosar-cpp/) ⭐ **Main Project**
-- **Production-style AUTOSAR architecture** with Software Components (SWCs), Runtime Environment (RTE), and port-based communication
-- **Modern C++17** with automotive best practices, smart pointers, and thread-safe programming
-- **Realistic automotive features**: Engine control, body control, auto-lighting, CAN messaging
-- **Professional build system** with CMake, comprehensive documentation, and demo application
-- **Industry-relevant skills**: Directly applicable to automotive ECU development positions
+### AUTOSAR C++ Implementation - Main Project
+The autosar-cpp directory contains a production-style AUTOSAR architecture with Software Components (SWCs), Runtime Environment (RTE), and port-based communication. It demonstrates modern C++17 with automotive best practices, smart pointers, and thread-safe programming. The implementation includes realistic automotive features such as engine control, body control, auto-lighting, and CAN messaging, along with a professional build system using CMake.
 
 ### Key Technical Demonstrations
-- **Software Components**: Engine SWC (10Hz), Body Control SWC (2Hz) with proper AUTOSAR lifecycle
-- **Runtime Environment**: Thread-safe data routing, scheduling, port connection management  
-- **CAN Communication**: Automotive message formats, encoding/decoding, realistic protocol simulation
-- **Inter-component Communication**: Type-safe data exchange between ECUs via RTE ports
-- **Real-time Scheduling**: Deterministic execution patterns matching production automotive systems
+The project includes Software Components for engine control (10Hz) and body control (2Hz) with proper AUTOSAR lifecycle management. The Runtime Environment provides thread-safe data routing, scheduling, and port connection management. CAN communication is implemented with automotive message formats, encoding/decoding, and realistic protocol simulation. Inter-component communication demonstrates type-safe data exchange between ECUs via RTE ports, with real-time scheduling that matches deterministic execution patterns found in production automotive systems.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Navigate to the main AUTOSAR implementation
@@ -30,14 +22,9 @@ cd build
 ./autosar_demo
 ```
 
-This launches a complete AUTOSAR system demonstrating:
-- Engine and body control ECU simulation
-- Real-time component scheduling
-- Inter-component data flow for auto features
-- CAN message transmission with automotive protocols
-- External interaction simulation (doors, lights)
+This launches a complete AUTOSAR system demonstrating engine and body control ECU simulation, real-time component scheduling, inter-component data flow for auto features, CAN message transmission with automotive protocols, and external interaction simulation for doors and lights.
 
-## 📊 What You'll See
+## What You'll See
 
 ```
 === AUTOSAR C++ Learning Demo ===
@@ -54,84 +41,41 @@ This launches a complete AUTOSAR system demonstrating:
 [RTE] Scheduler cycle 1000, Data exchanges: 156
 ```
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
-```
-🚗 Vehicle ECUs                     📡 Communication
-┌─────────────────┐                ┌─────────────────┐
-│   Engine ECU    │◄──────────────►│   CAN Network   │
-│                 │                │                 │
-│ • RPM Control   │                │ • Message IDs   │
-│ • Temperature   │                │ • Data Encoding │
-│ • Throttle      │                │ • Bus Arbitr.   │
-└─────────────────┘                └─────────────────┘
-         ▲                                   ▲
-         │                                   │
-🔄 AUTOSAR Runtime Environment (RTE)         │
-         │                                   │
-         ▼                                   ▼
-┌─────────────────┐                ┌─────────────────┐
-│ Body Control    │◄──────────────►│  Other ECUs     │
-│                 │                │                 │  
-│ • Door Status   │                │ • Gateway       │
-│ • Lighting      │                │ • Diagnostics   │
-│ • Auto Features │                │ • Infotainment  │
-└─────────────────┘                └─────────────────┘
-```
+The system consists of multiple Vehicle ECUs communicating through a CAN Network. The Engine ECU handles RPM control, temperature monitoring, and throttle management. It communicates with other components via the CAN Network, which manages message IDs, data encoding, and bus arbitration.
 
-## 🎓 Learning Progression
+The AUTOSAR Runtime Environment (RTE) serves as the central coordination layer, connecting the Engine ECU with the Body Control module and other ECUs. The Body Control ECU manages door status, lighting systems, and auto features, while other ECUs in the system include gateway modules, diagnostics, and infotainment systems.
 
-This project demonstrates a complete learning journey:
+## Learning Progression
 
-1. **[prototypes/](./prototypes/)** - Initial explorations with Python and simple C++
-2. **[autosar-learning/](./autosar-learning/)** - Python AUTOSAR concept exploration  
-3. **[autosar-cpp/](./autosar-cpp/)** - **Production-ready C++ implementation** ⭐
+This project demonstrates a complete learning journey. The prototypes directory contains initial explorations with Python and simple C++. The autosar-learning directory shows Python AUTOSAR concept exploration. The autosar-cpp directory contains the production-ready C++ implementation that represents the main focus of the project.
 
 The final AUTOSAR C++ implementation represents industry-standard automotive software development and directly aligns with skills required for positions at automotive companies like Lear, Continental, Bosch, and others.
 
-## 🛠️ Technical Skills Demonstrated
+## Technical Skills Demonstrated
 
 ### AUTOSAR Architecture
-- ✅ Software Component design and implementation
-- ✅ Runtime Environment with port-based communication
-- ✅ Interface definitions and type safety
-- ✅ Component lifecycle management and scheduling
+Software Component design and implementation, Runtime Environment with port-based communication, interface definitions and type safety, and component lifecycle management and scheduling.
 
-### Automotive C++ Programming  
-- ✅ Modern C++17 with automotive coding standards
-- ✅ Thread-safe programming and resource management
-- ✅ Template metaprogramming for type-safe interfaces
-- ✅ RAII and smart pointer usage for embedded safety
+### Automotive C++ Programming
+Modern C++17 with automotive coding standards, thread-safe programming and resource management, template metaprogramming for type-safe interfaces, and RAII and smart pointer usage for embedded safety.
 
 ### Embedded Systems
-- ✅ Real-time scheduling and timing constraints
-- ✅ Memory management for resource-constrained systems
-- ✅ Deterministic behavior and error handling
-- ✅ Professional build systems and documentation
+Real-time scheduling and timing constraints, memory management for resource-constrained systems, deterministic behavior and error handling, and professional build systems and documentation.
 
 ### Automotive Domain Knowledge
-- ✅ CAN bus protocols and message encoding
-- ✅ ECU communication patterns and network topology
-- ✅ Realistic automotive feature implementation
-- ✅ Industry-standard development practices
+CAN bus protocols and message encoding, ECU communication patterns and network topology, realistic automotive feature implementation, and industry-standard development practices.
 
-## 🎯 Career Relevance
+## Career Relevance
 
-This project directly demonstrates competencies required for automotive software engineering roles:
+This project directly demonstrates competencies required for automotive software engineering roles. ECU Software Development skills include AUTOSAR components, real-time systems, and C++ proficiency. Automotive Protocols experience covers CAN communication, message formats, and network programming. Embedded Systems knowledge encompasses resource management, timing constraints, and safety-critical patterns. Software Architecture capabilities include component-based design, interface specifications, and system integration.
 
-- **ECU Software Development**: AUTOSAR components, real-time systems, C++ proficiency
-- **Automotive Protocols**: CAN communication, message formats, network programming
-- **Embedded Systems**: Resource management, timing constraints, safety-critical patterns
-- **Software Architecture**: Component-based design, interface specifications, system integration
+The project provides excellent preparation for positions requiring AUTOSAR knowledge, embedded C++ development, and automotive domain expertise.
 
-Perfect preparation for positions requiring AUTOSAR knowledge, embedded C++ development, and automotive domain expertise.
+## Documentation
 
-## 📚 Documentation
-
-- **[AUTOSAR Implementation Guide](./autosar-cpp/README.md)** - Complete technical documentation
-- **[Architecture Deep-dive](./autosar-cpp/docs/autosar-cpp-learning-blog.md)** - Educational blog post
-- **[API Documentation](./autosar-cpp/include/)** - Comprehensive code documentation
-- **[Build Instructions](./autosar-cpp/build.sh)** - Professional development workflow
+The autosar-cpp directory contains complete technical documentation in its README.md file. An educational blog post explaining the architecture is available in the docs subdirectory. Comprehensive code documentation is embedded throughout the include directory headers. Professional development workflow instructions are provided in the build.sh script.
 
 ---
 

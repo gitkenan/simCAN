@@ -5,28 +5,19 @@ This folder contains early prototypes and explorations that led to the main AUTO
 ## Files
 
 ### Python Prototypes
-- **`can_simulation.py`** - Basic CAN bus concepts and message simulation
-- **`automotive_can_simulation.py`** - More realistic automotive ECU simulation with multiple components
+can_simulation.py demonstrates basic CAN bus concepts and message simulation. automotive_can_simulation.py provides more realistic automotive ECU simulation with multiple components.
 
-### C++ Prototype  
-- **`can_simulation_cpp.cpp`** - Initial C++ exploration of CAN messaging and threading
-- **`Makefile`** - Simple build system for the C++ prototype
+### C++ Prototype
+can_simulation_cpp.cpp shows initial C++ exploration of CAN messaging and threading. The Makefile provides a simple build system for the C++ prototype.
 
 ## Purpose
 
-These prototypes served as stepping stones to understand:
-- CAN bus communication fundamentals
-- Multi-threaded ECU simulation
-- Automotive message formats and timing
-- Basic embedded systems concepts
+These prototypes served as stepping stones to understand CAN bus communication fundamentals, multi-threaded ECU simulation, automotive message formats and timing, and basic embedded systems concepts.
 
 ## Evolution
 
-The learning progression was:
-1. **Python exploration** → Rapid prototyping to understand concepts
-2. **Simple C++** → Introduction to embedded programming patterns  
-3. **AUTOSAR C++** → Production-ready automotive architecture (main project)
+The learning progression moved from Python exploration for rapid prototyping to understand concepts, then to simple C++ for introduction to embedded programming patterns, and finally to AUTOSAR C++ for production-ready automotive architecture in the main project.
 
 ## Note
 
-For the current, production-quality implementation, see the main **[autosar-cpp/](../autosar-cpp/)** directory. These prototypes are preserved for educational context but are superseded by the AUTOSAR implementation.
+For the current, production-quality implementation, see the main autosar-cpp directory. These prototypes are preserved for educational context but are superseded by the AUTOSAR implementation.
