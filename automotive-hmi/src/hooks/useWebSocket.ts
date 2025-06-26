@@ -22,9 +22,15 @@ export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
   
   const pollingIntervalRef = useRef<NodeJS.Timeout>()
   const pollInterval = 1000 // 1 second polling
+  const baseUrlRef = useRef(baseUrl)
+  
+  // Update ref when baseUrl changes
+  useEffect(() => {
+    baseUrlRef.current = baseUrl
+  }, [baseUrl])
 
   const addError = useCallback((error: string) => {
-    setErrors(prev => [...prev.slice(-4), error]) // Keep last 5 errors
+    setErrors(prev => [...prev.slice(-4), error]) // Keep last 5 errors (slice(-4) keeps 4, then add 1 = 5 total)
   }, [])
 
   const clearErrors = useCallback(() => {
@@ -33,7 +39,7 @@ export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
 
   const fetchVehicleState = useCallback(async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/vehicle`, {
+      const response = await fetch(`${baseUrlRef.current}/api/vehicle`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -57,7 +63,7 @@ export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
       setConnected(false)
       addError(`Failed to fetch vehicle state: ${error}`)
     }
-  }, [baseUrl, addError])
+  }, [addError])
 
   const sendCommand = useCallback(async (command: Omit<UserCommandMessage, 'timestamp'>) => {
     try {
@@ -66,7 +72,7 @@ export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
         timestamp: Date.now()
       }
 
-      const response = await fetch(`${baseUrl}/api/command`, {
+      const response = await fetch(`${baseUrlRef.current}/api/command`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +90,7 @@ export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
     } catch (error) {
       addError(`Failed to send command: ${error}`)
     }
-  }, [baseUrl, addError])
+  }, [addError])
 
   const startPolling = useCallback(() => {
     // Initial fetch
@@ -114,7 +120,7 @@ export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
     return () => {
       stopPolling()
     }
-  }, [startPolling, stopPolling])
+  }, []) // Empty deps - only run on mount/unmount
 
   return {
     connected,
