@@ -6,6 +6,7 @@ export interface EngineData {
   running: boolean
   oilPressure?: number
   fuelLevel?: number
+  speed?: number  // Vehicle speed in km/h
 }
 
 export interface DoorStatus {
@@ -33,6 +34,21 @@ export interface LightControl {
   interiorLights: boolean
 }
 
+export interface WarningLights {
+  engineCheck: boolean
+  oilPressure: boolean
+  batteryCharge: boolean
+  brakeSystem: boolean
+  absSystem: boolean
+  seatbelt: boolean
+  doorAjar: boolean
+  fuelLow: boolean
+  turnSignalLeft: boolean
+  turnSignalRight: boolean
+  highBeam: boolean
+  parkingBrake: boolean
+}
+
 export interface VehicleState {
   engine: EngineData
   body: {
@@ -42,6 +58,7 @@ export interface VehicleState {
   }
   ignition: 'OFF' | 'ACC' | 'ON' | 'START'
   gear: 'P' | 'R' | 'N' | 'D' | 'S'
+  warnings?: WarningLights
   timestamp: number
 }
 
