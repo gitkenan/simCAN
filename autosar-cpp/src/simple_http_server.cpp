@@ -290,7 +290,8 @@ json SimpleHTTPServer::getVehicleState() {
                 {"throttlePosition", static_cast<int>(engine_data.throttle_position)},
                 {"running", engine_data.rpm > 0},
                 {"oilPressure", 60},  // Simulated
-                {"fuelLevel", 75}     // Simulated
+                {"fuelLevel", 75},    // Simulated
+                {"speed", static_cast<int>(engine_data.rpm * 0.02)} // Simulated speed based on RPM
             }},
             {"body", {
                 {"doors", {
@@ -331,7 +332,8 @@ json SimpleHTTPServer::getEngineData() {
         {"throttlePosition", static_cast<int>(engine_data.throttle_position)},
         {"running", engine_data.rpm > 0},
         {"oilPressure", 60},
-        {"fuelLevel", 75}
+        {"fuelLevel", 75},
+        {"speed", static_cast<int>(engine_data.rpm * 0.02)}
     };
 }
 
