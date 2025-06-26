@@ -7,6 +7,11 @@
  * - Port definitions
  * - Interface specifications
  * - Runnable entities
+ * 
+ * C++20 Features Used:
+ * - Concepts for type-safe ports
+ * - Requires clauses for template constraints
+ * - consteval for compile-time validation
  */
 
 #ifndef SWC_BASE_HPP
@@ -19,6 +24,7 @@
 #include <thread>
 #include <atomic>
 #include <iostream>
+#include <concepts>
 
 namespace autosar {
 
@@ -76,14 +82,18 @@ protected:
 };
 
 /**
- * @brief Typed port template for specific data types
+ * @brief Typed port template for specific data types with C++20 concepts
  */
-template<typename T>
+template<AutosarDataType T>
 class TypedPort : public Port {
 public:
     TypedPort(const std::string& name, PortDirection direction,
               std::shared_ptr<Interface> interface)
-        : Port(name, direction, interface), has_data_(false) {}
+        : Port(name, direction, interface), has_data_(false) {
+        // C++20 consteval validation at compile time
+        static_assert(sizeof(T) <= 8, "AUTOSAR data type must fit in CAN message");
+        static_assert(std::is_trivially_copyable_v<T>, "AUTOSAR data type must be trivially copyable");
+    }
     
     void setData(const void* data) override {
         if (data) {
@@ -100,13 +110,13 @@ public:
         return false;
     }
     
-    // Type-safe accessors
-    void write(const T& data) {
+    // Type-safe accessors with C++20 concepts
+    void write(const T& data) requires AutosarDataType<T> {
         data_ = data;
         has_data_ = true;
     }
     
-    bool read(T& data) const {
+    bool read(T& data) const requires AutosarDataType<T> {
         if (has_data_) {
             data = data_;
             return true;
@@ -114,7 +124,18 @@ public:
         return false;
     }
     
+    // C++20 designated initializer support
+    template<typename... Args>
+    void writeWithInit(Args&&... args) requires std::constructible_from<T, Args...> {
+        data_ = T{std::forward<Args>(args)...};
+        has_data_ = true;
+    }
+    
     bool isValid() const { return has_data_; }
+    
+    // C++20 consteval compile-time size validation
+    static consteval size_t getDataSize() { return sizeof(T); }
+    static consteval bool isCANCompatible() { return sizeof(T) <= 8; }
     
 private:
     T data_;

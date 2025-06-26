@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/kenan/simCAN/autosar-cpp/include
 
-CXX_FLAGS = -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O2 -std=c++17
+CXX_FLAGS = -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Werror -Wno-unused-parameter -O2 -std=c++20
 

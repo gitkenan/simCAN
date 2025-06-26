@@ -43,13 +43,13 @@ Software Components (SWCs) provide modular, reusable application components. The
 ### Automotive Domain
 Engine Control includes RPM monitoring, temperature management, and throttle simulation. Body Control manages door status, lighting systems, window management, and auto features. CAN Communication implements realistic message formats following automotive standards. Real-time Scheduling ensures component execution at industry-standard frequencies.
 
-### Modern C++ Features
-Smart Pointers provide automatic memory management for embedded safety. Templates enable type-safe generic programming for AUTOSAR ports. Thread Safety is achieved through mutex-protected shared data with atomic operations. RAII ensures proper resource management following automotive best practices.
+### Modern C++20 Features
+Smart Pointers provide automatic memory management for embedded safety. Concepts enable compile-time type safety for AUTOSAR data types and port validation. Designated Initializers provide clear, readable initialization of automotive data structures. Templates with requires clauses ensure type-safe generic programming for AUTOSAR ports. Thread Safety is achieved through mutex-protected shared data with atomic operations. RAII ensures proper resource management following automotive best practices. Consteval functions provide compile-time validation of automotive constraints.
 
 ## Building and Running
 
 ### Prerequisites
-- C++17 compatible compiler (GCC 7+, Clang 5+, MSVC 2017+)
+- C++20 compatible compiler (GCC 10+, Clang 10+, MSVC 2019+)
 - CMake 3.16 or newer
 - POSIX threads support
 
@@ -119,7 +119,7 @@ The docs directory contains a detailed technical explanation blog post. Comprehe
 
 ## Industry Relevance
 
-This implementation demonstrates skills directly applicable to automotive software development. AUTOSAR Expertise shows understanding of component-based automotive architecture. C++ Proficiency demonstrates modern language features used in production automotive code. Embedded Systems knowledge covers real-time constraints and resource management. Communication Protocols experience includes CAN bus and automotive networking knowledge. Professional Practices encompass CMake, documentation, and code organization.
+This implementation demonstrates skills directly applicable to automotive software development. AUTOSAR Expertise shows understanding of component-based automotive architecture. C++20 Proficiency demonstrates cutting-edge language features including concepts, designated initializers, and consteval functions used in modern automotive code. Embedded Systems knowledge covers real-time constraints and resource management. Communication Protocols experience includes CAN bus and automotive networking knowledge. Professional Practices encompass CMake, documentation, and code organization.
 
 The project provides excellent preparation for roles in automotive embedded systems, ECU development, and AUTOSAR-based projects.
 

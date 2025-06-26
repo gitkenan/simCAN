@@ -26,11 +26,10 @@ BodyControlSWC::BodyControlSWC(std::shared_ptr<CANInterface> can_interface)
         throw std::invalid_argument("CAN interface cannot be null");
     }
     
-    // Initialize all body control systems to safe/default states
-    // All doors closed, lights off, windows closed
-    current_door_status_ = DoorStatus();
-    current_light_control_ = LightControl();
-    current_window_position_ = WindowPosition();
+    // Initialize all body control systems to safe/default states using C++20 designated initializers
+    current_door_status_ = DoorStatus::all_closed();
+    current_light_control_ = LightControl::all_off();
+    current_window_position_ = WindowPosition::all_closed();
     
     last_execution_ = std::chrono::steady_clock::now();
 }

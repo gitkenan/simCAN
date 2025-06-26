@@ -24,15 +24,23 @@
 namespace autosar {
 
 /**
- * @brief Window position data structure
+ * @brief Window position data structure with C++20 designated initializer support
  */
 struct WindowPosition {
-    uint8 front_left;     // 0-100% open
-    uint8 front_right;
-    uint8 rear_left;
-    uint8 rear_right;
+    uint8 front_left = 0;     // 0-100% open
+    uint8 front_right = 0;
+    uint8 rear_left = 0;
+    uint8 rear_right = 0;
     
-    WindowPosition() : front_left(0), front_right(0), rear_left(0), rear_right(0) {}
+    // C++20 designated initializer support
+    static constexpr WindowPosition all_closed() {
+        return WindowPosition{
+            .front_left = 0,
+            .front_right = 0,
+            .rear_left = 0,
+            .rear_right = 0
+        };
+    }
 };
 
 /**

@@ -22,10 +22,12 @@ EngineSWC::EngineSWC(std::shared_ptr<CANInterface> can_interface)
         throw std::invalid_argument("CAN interface cannot be null");
     }
     
-    // Initialize engine data to realistic idle values
-    current_engine_data_.rpm = MIN_RPM;
-    current_engine_data_.temperature = 90;  // Normal operating temperature
-    current_engine_data_.throttle_position = 0;  // Closed throttle at idle
+    // Initialize engine data to realistic idle values using C++20 designated initializers
+    current_engine_data_ = EngineData{
+        .rpm = MIN_RPM,
+        .temperature = 90,
+        .throttle_position = 0
+    };
     
     last_execution_ = std::chrono::steady_clock::now();
 }

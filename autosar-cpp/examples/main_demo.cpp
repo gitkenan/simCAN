@@ -128,10 +128,12 @@ int main() {
                     std::cout << "[DEMO] Closed front left door via external command" << std::endl;
                 }
                 
-                // Simulate light control
-                LightControl lights;
-                lights.headlights_on = (demo_cycle % 3 == 0);
-                lights.turn_signal_left = (demo_cycle % 4 == 0);
+                // Simulate light control using C++20 designated initializers
+                LightControl lights{
+                    .headlights_on = (demo_cycle % 3 == 0),
+                    .turn_signal_left = (demo_cycle % 4 == 0),
+                    .turn_signal_right = false
+                };
                 body_swc->setLightControl(lights);
                 std::cout << "[DEMO] Updated light control via external command" << std::endl;
                 

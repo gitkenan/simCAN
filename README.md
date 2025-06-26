@@ -5,7 +5,7 @@ A comprehensive automotive software development project demonstrating AUTOSAR ar
 ## Project Highlights
 
 ### AUTOSAR C++ Implementation - Main Project
-The autosar-cpp directory contains a production-style AUTOSAR architecture with Software Components (SWCs), Runtime Environment (RTE), and port-based communication. It demonstrates modern C++17 with automotive best practices, smart pointers, and thread-safe programming. The implementation includes realistic automotive features such as engine control, body control, auto-lighting, and CAN messaging, along with a professional build system using CMake.
+The autosar-cpp directory contains a production-style AUTOSAR architecture with Software Components (SWCs), Runtime Environment (RTE), and port-based communication. It demonstrates modern C++20 with automotive best practices, concepts for type safety, designated initializers, smart pointers, and thread-safe programming. The implementation includes realistic automotive features such as engine control, body control, auto-lighting, and CAN messaging, along with a professional build system using CMake.
 
 ### Key Technical Demonstrations
 The project includes Software Components for engine control (10Hz) and body control (2Hz) with proper AUTOSAR lifecycle management. The Runtime Environment provides thread-safe data routing, scheduling, and port connection management. CAN communication is implemented with automotive message formats, encoding/decoding, and realistic protocol simulation. Inter-component communication demonstrates type-safe data exchange between ECUs via RTE ports, with real-time scheduling that matches deterministic execution patterns found in production automotive systems.
@@ -59,7 +59,7 @@ The final AUTOSAR C++ implementation represents industry-standard automotive sof
 Software Component design and implementation, Runtime Environment with port-based communication, interface definitions and type safety, and component lifecycle management and scheduling.
 
 ### Automotive C++ Programming
-Modern C++17 with automotive coding standards, thread-safe programming and resource management, template metaprogramming for type-safe interfaces, and RAII and smart pointer usage for embedded safety.
+Modern C++20 with automotive coding standards, concepts for compile-time type safety, designated initializers for clear data structure initialization, thread-safe programming and resource management, template metaprogramming for type-safe interfaces, and RAII and smart pointer usage for embedded safety.
 
 ### Embedded Systems
 Real-time scheduling and timing constraints, memory management for resource-constrained systems, deterministic behavior and error handling, and professional build systems and documentation.

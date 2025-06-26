@@ -10,6 +10,11 @@
  * 
  * This simplified RTE demonstrates the core concepts while remaining
  * educational and comprehensible.
+ * 
+ * C++20 Features Used:
+ * - Concepts for type-safe data exchange
+ * - Requires clauses for template constraints
+ * - consteval for compile-time validation
  */
 
 #ifndef RTE_HPP
@@ -24,6 +29,7 @@
 #include <thread>
 #include <atomic>
 #include <functional>
+#include <concepts>
 
 namespace autosar {
 
@@ -100,12 +106,17 @@ public:
     Std_ReturnType start();
     Std_ReturnType stop();
     
-    // Data exchange functions (called by SWCs through generated stubs)
-    template<typename T>
+    // Data exchange functions (called by SWCs through generated stubs) with C++20 concepts
+    template<AutosarDataType T>
     Std_ReturnType writeData(const std::string& swc_name, const std::string& port_name, const T& data);
     
-    template<typename T>
+    template<AutosarDataType T>
     Std_ReturnType readData(const std::string& swc_name, const std::string& port_name, T& data);
+    
+    // C++20 consteval compile-time validation
+    static consteval bool isValidCycleTime(uint32 cycle_ms) {
+        return cycle_ms >= 1 && cycle_ms <= 10000;  // 1ms to 10s range
+    }
     
     // Status and debugging
     bool isRunning() const { return is_running_; }
@@ -142,7 +153,7 @@ private:
     
     // Data routing helpers
     void routeSpecificConnection(const PortConnection& connection);
-    template<typename T>
+    template<AutosarDataType T>
     bool routeTypedData(std::shared_ptr<Port> sender_port, std::shared_ptr<Port> receiver_port);
     
     // Configuration constants
@@ -152,7 +163,7 @@ private:
 
 // Template implementations (must be in header for C++)
 
-template<typename T>
+template<AutosarDataType T>
 Std_ReturnType RTE::writeData(const std::string& swc_name, const std::string& port_name, const T& data) {
     std::lock_guard<std::mutex> lock(rte_mutex_);
     
@@ -172,7 +183,7 @@ Std_ReturnType RTE::writeData(const std::string& swc_name, const std::string& po
     return Std_ReturnType::E_OK;
 }
 
-template<typename T>
+template<AutosarDataType T>
 Std_ReturnType RTE::readData(const std::string& swc_name, const std::string& port_name, T& data) {
     std::lock_guard<std::mutex> lock(rte_mutex_);
     
@@ -194,7 +205,7 @@ Std_ReturnType RTE::readData(const std::string& swc_name, const std::string& por
     return Std_ReturnType::E_NOT_OK;
 }
 
-template<typename T>
+template<AutosarDataType T>
 bool RTE::routeTypedData(std::shared_ptr<Port> sender_port, std::shared_ptr<Port> receiver_port) {
     // This is a simplified implementation - in production AUTOSAR,
     // the RTE generator would create type-specific routing functions
