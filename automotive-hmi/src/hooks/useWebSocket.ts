@@ -1,13 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import type { 
   VehicleState, 
-  WebSocketMessage, 
-  VehicleStateMessage, 
   UserCommandMessage,
-  SystemStatusMessage 
 } from '../types/autosar'
 
-interface UseWebSocketReturn {
+interface UseHTTPPollingReturn {
   connected: boolean
   vehicleState: VehicleState | null
   lastUpdate: number
@@ -17,17 +14,14 @@ interface UseWebSocketReturn {
   reconnect: () => void
 }
 
-export function useWebSocket(url: string): UseWebSocketReturn {
+export function useWebSocket(baseUrl: string): UseHTTPPollingReturn {
   const [connected, setConnected] = useState(false)
   const [vehicleState, setVehicleState] = useState<VehicleState | null>(null)
   const [lastUpdate, setLastUpdate] = useState(0)
   const [errors, setErrors] = useState<string[]>([])
   
-  const wsRef = useRef<WebSocket | null>(null)
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
-  const reconnectAttempts = useRef(0)
-  const maxReconnectAttempts = 5
-  const reconnectDelay = 3000
+  const pollingIntervalRef = useRef<NodeJS.Timeout>()
+  const pollInterval = 1000 // 1 second polling
 
   const addError = useCallback((error: string) => {
     setErrors(prev => [...prev.slice(-4), error]) // Keep last 5 errors
@@ -37,117 +31,90 @@ export function useWebSocket(url: string): UseWebSocketReturn {
     setErrors([])
   }, [])
 
-  const connect = useCallback(() => {
+  const fetchVehicleState = useCallback(async () => {
     try {
-      if (wsRef.current?.readyState === WebSocket.OPEN) {
-        return
+      const response = await fetch(`${baseUrl}/api/vehicle`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
-      wsRef.current = new WebSocket(url)
-
-      wsRef.current.onopen = () => {
+      const data = await response.json()
+      
+      if (data.type === 'VEHICLE_STATE' && data.data) {
+        setVehicleState(data.data)
+        setLastUpdate(data.timestamp)
         setConnected(true)
-        setErrors([])
-        reconnectAttempts.current = 0
-        console.log('WebSocket connected to', url)
+      } else {
+        throw new Error('Invalid response format')
       }
-
-      wsRef.current.onmessage = (event) => {
-        try {
-          const message: WebSocketMessage = JSON.parse(event.data)
-          
-          switch (message.type) {
-            case 'VEHICLE_STATE':
-              const vehicleMessage = message as VehicleStateMessage
-              setVehicleState(vehicleMessage.data)
-              setLastUpdate(vehicleMessage.timestamp)
-              break
-              
-            case 'SYSTEM_STATUS':
-              const statusMessage = message as SystemStatusMessage
-              if (statusMessage.status === 'ERROR' && statusMessage.message) {
-                addError(`System error: ${statusMessage.message}`)
-              }
-              break
-              
-            default:
-              console.log('Unknown message type:', message)
-          }
-        } catch (error) {
-          addError(`Failed to parse message: ${error}`)
-        }
-      }
-
-      wsRef.current.onerror = (error) => {
-        setConnected(false)
-        addError(`Connection error: ${error}`)
-        console.error('WebSocket error:', error)
-      }
-
-      wsRef.current.onclose = (event) => {
-        setConnected(false)
-        
-        if (!event.wasClean && reconnectAttempts.current < maxReconnectAttempts) {
-          reconnectAttempts.current++
-          addError(`Connection lost. Reconnecting... (${reconnectAttempts.current}/${maxReconnectAttempts})`)
-          
-          reconnectTimeoutRef.current = setTimeout(() => {
-            connect()
-          }, reconnectDelay)
-        } else if (reconnectAttempts.current >= maxReconnectAttempts) {
-          addError(`Failed to reconnect after ${maxReconnectAttempts} attempts`)
-        }
-      }
-
     } catch (error) {
-      addError(`Failed to connect: ${error}`)
+      setConnected(false)
+      addError(`Failed to fetch vehicle state: ${error}`)
     }
-  }, [url, addError])
+  }, [baseUrl, addError])
 
-  const sendCommand = useCallback((command: Omit<UserCommandMessage, 'timestamp'>) => {
-    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-      addError('Cannot send command: not connected')
-      return
-    }
-
-    const fullCommand: UserCommandMessage = {
-      ...command,
-      timestamp: Date.now()
-    }
-
+  const sendCommand = useCallback(async (command: Omit<UserCommandMessage, 'timestamp'>) => {
     try {
-      wsRef.current.send(JSON.stringify(fullCommand))
+      const fullCommand: UserCommandMessage = {
+        ...command,
+        timestamp: Date.now()
+      }
+
+      const response = await fetch(`${baseUrl}/api/command`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(fullCommand),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Command failed: HTTP ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log('Command response:', result)
     } catch (error) {
       addError(`Failed to send command: ${error}`)
     }
-  }, [addError])
+  }, [baseUrl, addError])
+
+  const startPolling = useCallback(() => {
+    // Initial fetch
+    fetchVehicleState()
+    
+    // Set up polling
+    pollingIntervalRef.current = setInterval(fetchVehicleState, pollInterval)
+  }, [fetchVehicleState])
+
+  const stopPolling = useCallback(() => {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current)
+      pollingIntervalRef.current = undefined
+    }
+    setConnected(false)
+  }, [])
 
   const reconnect = useCallback(() => {
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current)
-    }
-    
-    if (wsRef.current) {
-      wsRef.current.close()
-    }
-    
-    reconnectAttempts.current = 0
-    connect()
-  }, [connect])
+    stopPolling()
+    setErrors([])
+    startPolling()
+  }, [startPolling, stopPolling])
 
   useEffect(() => {
-    connect()
+    startPolling()
 
     return () => {
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current)
-      }
-      
-      if (wsRef.current) {
-        wsRef.current.close()
-      }
+      stopPolling()
     }
-  }, [connect])
+  }, [startPolling, stopPolling])
 
   return {
     connected,

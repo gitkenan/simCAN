@@ -51,6 +51,7 @@ set(AUTOSAR_SOURCES
     src/engine_swc.cpp
     src/body_swc.cpp
     src/rte.cpp
+    src/simple_http_server.cpp
 )
 
 set(AUTOSAR_HEADERS
@@ -60,6 +61,7 @@ set(AUTOSAR_HEADERS
     include/engine_swc.hpp
     include/body_swc.hpp
     include/rte.hpp
+    include/simple_http_server.hpp
 )
 
 # Main library
@@ -75,15 +77,44 @@ set_target_properties(autosar_core PROPERTIES
 # Find required packages
 find_package(Threads REQUIRED)
 
-# Link libraries
-target_link_libraries(autosar_core PRIVATE Threads::Threads)
+# Add JSON support via nlohmann/json (header-only)
+include(FetchContent)
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(nlohmann_json)
 
-# Example application (will be created next)
+# Note: For now, we'll create a simpler WebSocket implementation
+# without external dependencies. This can be enhanced later.
+
+# Link libraries
+target_link_libraries(autosar_core PRIVATE 
+    Threads::Threads 
+    nlohmann_json::nlohmann_json
+)
+
+# Example applications
 add_executable(autosar_demo
     examples/main_demo.cpp
 )
 
-target_link_libraries(autosar_demo PRIVATE autosar_core Threads::Threads)
+add_executable(autosar_hmi_demo
+    examples/main_hmi_demo.cpp
+)
+
+target_link_libraries(autosar_demo PRIVATE 
+    autosar_core 
+    Threads::Threads
+    nlohmann_json::nlohmann_json
+)
+
+target_link_libraries(autosar_hmi_demo PRIVATE 
+    autosar_core 
+    Threads::Threads
+    nlohmann_json::nlohmann_json
+)
 
 # Testing
 option(BUILD_TESTS "Build test suite" ON)
@@ -102,7 +133,7 @@ if(BUILD_DOCS)
 endif()
 
 # Installation
-install(TARGETS autosar_core autosar_demo
+install(TARGETS autosar_core autosar_demo autosar_hmi_demo
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin

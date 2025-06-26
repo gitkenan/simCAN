@@ -6,10 +6,10 @@ import { DoorPanel } from './DoorPanel'
 import { LightingControls } from './LightingControls'
 
 export interface VehicleDashboardProps {
-  websocketUrl?: string
+  apiBaseUrl?: string
 }
 
-export function VehicleDashboard({ websocketUrl = 'ws://localhost:8080' }: VehicleDashboardProps) {
+export function VehicleDashboard({ apiBaseUrl = 'http://localhost:8080' }: VehicleDashboardProps) {
   const {
     connected,
     vehicleState,
@@ -17,7 +17,7 @@ export function VehicleDashboard({ websocketUrl = 'ws://localhost:8080' }: Vehic
     sendCommand,
     clearErrors,
     reconnect
-  } = useWebSocket(websocketUrl)
+  } = useWebSocket(apiBaseUrl)
 
   if (!connected) {
     return (
