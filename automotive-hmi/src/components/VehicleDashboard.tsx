@@ -4,6 +4,8 @@ import { InstrumentCluster } from './InstrumentCluster'
 import { CenterConsole } from './CenterConsole'
 import { DoorPanel } from './DoorPanel'
 import { LightingControls } from './LightingControls'
+import { ClimateControls } from './ClimateControls'
+import { WarningLights } from './WarningLights'
 
 export interface VehicleDashboardProps {
   apiBaseUrl?: string
@@ -128,30 +130,55 @@ export function VehicleDashboard({ apiBaseUrl = 'http://localhost:8080' }: Vehic
               }
             />
           </div>
+
+          <div data-testid="climate-controls">
+            <ClimateControls 
+              onClimateChange={(climate) =>
+                sendCommand({
+                  type: 'USER_COMMAND',
+                  component: 'climate',
+                  action: 'setClimate',
+                  parameters: climate
+                })
+              }
+            />
+          </div>
         </div>
 
         {/* Right Panel - Body Controls */}
-        <div className="lg:col-span-1" data-testid="door-panel">
-          <DoorPanel 
-            doors={vehicleState.body.doors}
-            windows={vehicleState.body.windows}
-            onDoorToggle={(door) =>
-              sendCommand({
-                type: 'USER_COMMAND',
-                component: 'body',
-                action: 'toggleDoor',
-                parameters: { door }
-              })
-            }
-            onWindowChange={(window, position) =>
-              sendCommand({
-                type: 'USER_COMMAND',
-                component: 'body',
-                action: 'setWindow',
-                parameters: { window, position }
-              })
-            }
-          />
+        <div className="lg:col-span-1 space-y-6">
+          <div data-testid="door-panel">
+            <DoorPanel 
+              doors={vehicleState.body.doors}
+              windows={vehicleState.body.windows}
+              onDoorToggle={(door) =>
+                sendCommand({
+                  type: 'USER_COMMAND',
+                  component: 'body',
+                  action: 'toggleDoor',
+                  parameters: { door }
+                })
+              }
+              onWindowChange={(window, position) =>
+                sendCommand({
+                  type: 'USER_COMMAND',
+                  component: 'body',
+                  action: 'setWindow',
+                  parameters: { window, position }
+                })
+              }
+            />
+          </div>
+
+          <div data-testid="warning-lights">
+            <WarningLights 
+              warnings={vehicleState.warnings}
+              engineData={vehicleState.engine}
+              doors={vehicleState.body.doors}
+              lights={vehicleState.body.lights}
+              gear={vehicleState.gear}
+            />
+          </div>
         </div>
       </div>
 
