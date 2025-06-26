@@ -175,6 +175,39 @@ private:
     void executionLoop();
 };
 
+/**
+ * @brief Common AUTOSAR Interface Definitions
+ * 
+ * These interfaces are shared between multiple SWCs
+ */
+
+/**
+ * @brief Engine Data Interface - defines contract for engine communication
+ */
+class EngineDataInterface : public Interface {
+public:
+    EngineDataInterface() : Interface("EngineDataInterface", InterfaceType::SENDER_RECEIVER) {}
+    ~EngineDataInterface() override = default;
+};
+
+/**
+ * @brief Door Status Interface - defines contract for door communication
+ */
+class DoorStatusInterface : public Interface {
+public:
+    DoorStatusInterface() : Interface("DoorStatusInterface", InterfaceType::SENDER_RECEIVER) {}
+    ~DoorStatusInterface() override = default;
+};
+
+/**
+ * @brief Light Control Interface - defines contract for lighting system
+ */
+class LightControlInterface : public Interface {
+public:
+    LightControlInterface() : Interface("LightControlInterface", InterfaceType::SENDER_RECEIVER) {}
+    ~LightControlInterface() override = default;
+};
+
 } // namespace autosar
 
 #endif // SWC_BASE_HPP

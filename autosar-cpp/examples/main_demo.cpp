@@ -76,7 +76,18 @@ int main() {
         
         std::cout << "[DEMO] Registered SWCs with RTE" << std::endl;
         
-        // 4. Connect ports for inter-SWC communication
+        // 4. Print system configuration
+        rte.printSWCStatus();
+        
+        // 5. Start the AUTOSAR system (this will initialize SWCs and create ports)
+        if (rte.start() != Std_ReturnType::E_OK) {
+            std::cerr << "Failed to start RTE" << std::endl;
+            return 1;
+        }
+        
+        std::cout << "\n[DEMO] AUTOSAR system started successfully!" << std::endl;
+        
+        // 6. Connect ports for inter-SWC communication (now that SWCs are initialized)
         // Engine SWC sends engine data to Body Control SWC for auto features
         if (rte.connectPorts("EngineSWC", "EngineDataPort", 
                             "BodyControlSWC", "EngineDataPort") != Std_ReturnType::E_OK) {
@@ -86,20 +97,13 @@ int main() {
         
         std::cout << "[DEMO] Connected SWC ports" << std::endl;
         
-        // 5. Print system configuration
+        // 7. Print final system configuration
         rte.printConnections();
         rte.printSWCStatus();
         
-        // 6. Start the AUTOSAR system
-        if (rte.start() != Std_ReturnType::E_OK) {
-            std::cerr << "Failed to start RTE" << std::endl;
-            return 1;
-        }
-        
-        std::cout << "\n[DEMO] AUTOSAR system started successfully!" << std::endl;
         std::cout << "Monitoring system activity (press Ctrl+C to stop)...\n" << std::endl;
         
-        // 7. Run system and demonstrate features
+        // 8. Run system and demonstrate features
         auto start_time = std::chrono::steady_clock::now();
         int demo_cycle = 0;
         
@@ -158,7 +162,7 @@ int main() {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
         
-        // 8. Graceful shutdown
+        // 9. Graceful shutdown
         std::cout << "\n[DEMO] Stopping AUTOSAR system..." << std::endl;
         
         if (rte.stop() != Std_ReturnType::E_OK) {

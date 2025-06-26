@@ -24,24 +24,6 @@
 namespace autosar {
 
 /**
- * @brief Door Status Interface - defines contract for door communication
- */
-class DoorStatusInterface : public Interface {
-public:
-    DoorStatusInterface() : Interface("DoorStatusInterface", InterfaceType::SENDER_RECEIVER) {}
-    ~DoorStatusInterface() override = default;
-};
-
-/**
- * @brief Light Control Interface - defines contract for lighting system
- */
-class LightControlInterface : public Interface {
-public:
-    LightControlInterface() : Interface("LightControlInterface", InterfaceType::SENDER_RECEIVER) {}
-    ~LightControlInterface() override = default;
-};
-
-/**
  * @brief Window position data structure
  */
 struct WindowPosition {
@@ -156,6 +138,7 @@ private:
     uint8* getWindowPositionPointer(uint8 window_index);
     const char* getDoorName(uint8 door_index) const;
     const char* getWindowName(uint8 window_index) const;
+    void logCurrentStatus();
 };
 
 } // namespace autosar

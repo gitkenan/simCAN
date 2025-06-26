@@ -1,0 +1,2 @@
+/usr/bin/ar qc libautosar_core.a CMakeFiles/autosar_core.dir/src/swc_base.cpp.o CMakeFiles/autosar_core.dir/src/can_interface.cpp.o CMakeFiles/autosar_core.dir/src/engine_swc.cpp.o CMakeFiles/autosar_core.dir/src/body_swc.cpp.o CMakeFiles/autosar_core.dir/src/rte.cpp.o
+/usr/bin/ranlib libautosar_core.a

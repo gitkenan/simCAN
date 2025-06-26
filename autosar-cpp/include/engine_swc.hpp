@@ -21,15 +21,6 @@
 namespace autosar {
 
 /**
- * @brief Engine Data Interface - defines contract for engine communication
- */
-class EngineDataInterface : public Interface {
-public:
-    EngineDataInterface() : Interface("EngineDataInterface", InterfaceType::SENDER_RECEIVER) {}
-    ~EngineDataInterface() override = default;
-};
-
-/**
  * @brief Engine Software Component
  * 
  * This SWC represents the application layer of an Engine Control Module (ECM).

@@ -26,6 +26,7 @@ using sint16 = std::int16_t;
 using sint32 = std::int32_t;
 using float32 = float;
 using float64 = double;
+using uint64 = std::uint64_t;
 
 // Return codes used throughout AUTOSAR
 enum class Std_ReturnType : uint8 {

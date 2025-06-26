@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/autosar_demo.dir/examples/main_demo.cpp.o -o autosar_demo  libautosar_core.a 
