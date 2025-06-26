@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap');
+
+@layer base {
+  :root {
+    --primary: 220 14% 95%;
+    --primary-foreground: 220 8% 15%;
+    --background: 0 0% 6%;
+    --foreground: 0 0% 95%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-automotive-black text-automotive-chrome font-automotive;
+    @apply antialiased;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .gauge-container {
+    @apply relative w-32 h-32 rounded-full border-2 border-automotive-steel;
+  }
+
+  .gauge-needle {
+    @apply absolute top-1/2 left-1/2 origin-bottom;
+    transform-origin: 50% 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .automotive-button {
+    @apply bg-automotive-charcoal border border-automotive-steel;
+    @apply text-automotive-chrome hover:bg-automotive-steel;
+    @apply transition-all duration-200 ease-in-out;
+    @apply px-4 py-2 rounded-md font-medium;
+  }
+
+  .automotive-button:hover {
+    @apply shadow-lg shadow-automotive-accent/20;
+  }
+
+  .automotive-button:active {
+    @apply bg-automotive-accent text-white;
+  }
+
+  .automotive-button.danger {
+    @apply bg-automotive-danger/20 border-automotive-danger;
+    @apply hover:bg-automotive-danger hover:text-white;
+  }
+
+  .automotive-input {
+    @apply bg-automotive-charcoal border border-automotive-steel;
+    @apply text-automotive-chrome placeholder-automotive-silver;
+    @apply focus:border-automotive-accent focus:outline-none;
+    @apply px-3 py-2 rounded-md;
+  }
+
+  .warning-light {
+    @apply w-4 h-4 rounded-full border border-automotive-steel;
+    @apply transition-all duration-300;
+  }
+
+  .warning-light.on {
+    @apply bg-automotive-warning shadow-lg;
+    @apply shadow-automotive-warning/50;
+  }
+
+  .warning-light.danger {
+    @apply bg-automotive-danger shadow-lg;
+    @apply shadow-automotive-danger/50;
+  }
+
+  .warning-light.success {
+    @apply bg-automotive-success shadow-lg;
+    @apply shadow-automotive-success/50;
+  }
+}
