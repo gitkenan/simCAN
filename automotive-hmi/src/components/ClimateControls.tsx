@@ -1,33 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
+import type { ClimateControl } from '../types/autosar'
 
-export interface ClimateState {
-  temperature: number
-  fanSpeed: number
-  mode: 'OFF' | 'HEAT' | 'COOL' | 'AUTO'
-  airDirection: 'FACE' | 'FEET' | 'DEFROST' | 'MIX'
-  acEnabled: boolean
-  recirculation: boolean
-  rearDefrost: boolean
-}
+export type ClimateState = ClimateControl // Re-export for backward compatibility
 
 export interface ClimateControlsProps {
   climate?: ClimateState
   onClimateChange?: (climate: ClimateState) => void
 }
 
+const DEFAULT_CLIMATE: ClimateState = {
+  temperature: 22,
+  fanSpeed: 3,
+  mode: 'AUTO',
+  airDirection: 'FACE',
+  acEnabled: true,
+  recirculation: false,
+  rearDefrost: false
+}
+
 export function ClimateControls({ 
-  climate = {
-    temperature: 22,
-    fanSpeed: 3,
-    mode: 'AUTO',
-    airDirection: 'FACE',
-    acEnabled: true,
-    recirculation: false,
-    rearDefrost: false
-  },
+  climate,
   onClimateChange 
 }: ClimateControlsProps) {
-  const [localClimate, setLocalClimate] = useState<ClimateState>(climate)
+  const currentClimate = useMemo(() => climate || DEFAULT_CLIMATE, [climate])
+  const [localClimate, setLocalClimate] = useState<ClimateState>(currentClimate)
+
+  // Sync local state with prop changes
+  useEffect(() => {
+    setLocalClimate(currentClimate)
+  }, [currentClimate])
 
   const updateClimate = (updates: Partial<ClimateState>) => {
     const newClimate = { ...localClimate, ...updates }
