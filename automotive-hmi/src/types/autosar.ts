@@ -49,6 +49,16 @@ export interface WarningLights {
   parkingBrake: boolean
 }
 
+export interface ClimateControl {
+  temperature: number
+  fanSpeed: number
+  mode: 'OFF' | 'HEAT' | 'COOL' | 'AUTO'
+  airDirection: 'FACE' | 'FEET' | 'DEFROST' | 'MIX'
+  acEnabled: boolean
+  recirculation: boolean
+  rearDefrost: boolean
+}
+
 export interface VehicleState {
   engine: EngineData
   body: {
@@ -59,6 +69,7 @@ export interface VehicleState {
   ignition: 'OFF' | 'ACC' | 'ON' | 'START'
   gear: 'P' | 'R' | 'N' | 'D' | 'S'
   warnings?: WarningLights
+  climate?: ClimateControl
   timestamp: number
 }
 
@@ -71,7 +82,7 @@ export interface VehicleStateMessage {
 
 export interface UserCommandMessage {
   type: 'USER_COMMAND'
-  component: 'engine' | 'body' | 'ignition' | 'transmission'
+  component: 'engine' | 'body' | 'ignition' | 'transmission' | 'climate'
   action: string
   parameters: Record<string, any>
   timestamp: number
